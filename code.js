@@ -1,92 +1,135 @@
-let nombreJugador = prompt('Escribe tu nombre') 
-alert(`Bienvenido ${nombreJugador} a la base de datos de los estudiantes de la escuela, pero antes, ¿no quieres jugar al juego del vehiculo invisible?`)
+/* variables globales */
 
-function mostrarInstrucciones() {
-     alert(`Hola ${nombreJugador} a continuación te mostrare las instrucciones acerca de como jugar
-     - start = arranca el vehiculo
-     - stop = detiene el vehiculo
-     - help = muestra las instrucciones
-     - exit = salir del juego
- `)}
+// El icono del carrito de compras
+const btnCart = document.querySelector('.icon-cart')
 
- mostrarInstrucciones()
+// Cada uno de los items dentro del carrito de compra
+const rowProduct = document.querySelector('.row-product')
 
- let command = ''; 
- let started = false;
+// El total a pagar, se muestra dentro de la tarjeta del carrito de compras (.container-cart-products)
+const valorTotal = document.querySelector('.total-pagar');
 
- while (true) {
-     command = prompt('Introduce una orden').toLocaleLowerCase();
-     if (command === 'start') {
-        if (started === true) {
-            alert('El vehiculo ya está encendido y andando. No puedes volver a encenderlo')
-        } else
-         alert('El vehiculo ha encendido y arrancado')
-         started = true;
-     }else if (command === 'stop') {
-        if (started === false) {
-            alert('El vehiculo ya está detenido. No puedes volver a detenerlo')
-        } else
-         alert('El vehiculo se ha detenido')
-         started = false;
-     }else if (command === 'help') {
-         mostrarInstrucciones()
-     } else if (command === 'exit') {
-         alert('Gracias por jugar, vuelve pronto')
-         break
-     } else if (command !== 'start' || command !== 'stop' || command !== 'help') {
-         alert('No entendí, te volveré a mostrar la lista de comandos')
-         mostrarInstrucciones()
-     } 
- }  
+// El contador que muestra el numero de items dentro del carrito
+const countProducts = document.querySelector('#contador-productos'); 
 
-alert(`Ahora continua con la base de datos, para interactuar con el sistema por favor abre la consola`)
+// Este div contiene las diferentes tarjetas con los productos de la pagina
+const productsList = document.querySelector('.container-items')
 
-let estudiantes = [
-    {name: 'David', apellido: 'Perez', edad: 14, grado: 4},
-    {name: 'Lisa', apellido: 'Simpson', edad: 10, grado: 1},
-    {name: 'Roberto', apellido: 'Espinoza', edad: 11, grado: 2},
-    {name: 'Cindy', apellido: 'Nero', edad: 12, grado: 3}
-]
+// Variable que contendrá o el arreglo de objetos del localStorage o un arreglo vacío
+let allProducts = JSON.parse(localStorage.getItem("carrito")) || [];
 
-console.log('Bienvenido al sistema de la escuela');
 
-// Funcion para contar el numero de estudiantes 
-let contador = 0;
 
-estudiantes.forEach( estudiante => {
-    contador++;
-});
-console.log(`Hay ${contador} estudiantes inscritos en el instituto hasta el momento`);
+/* Funciones del proyecto */
 
-// Funcion para mostrar a los estudiantes inscritos
+// Funcion para mostrar o esconder el carrito 
+btnCart.addEventListener('click', () => {
+    let containerCartProdcuts = document.querySelector('.container-cart-products')
 
-for (let estudiante of estudiantes) {
-    console.log(`Nombre: ${estudiante.name}, Apellido: ${estudiante.apellido}, Edad: ${estudiante.edad}, Grado: ${estudiante.grado}   `)
+    if (containerCartProdcuts.style.display === 'none') {
+        containerCartProdcuts.style.display = 'block';
+    } 
+    else {
+        containerCartProdcuts.style.display = 'none';
+    }
+} )
+
+// Funcion para guardar el contenido del arreglo en el localStorage
+const saveLocal = () => {
+    localStorage.setItem("carrito" , JSON.stringify(allProducts));
+};
+
+
+// Funcion para agregar un producto al carrito a traves del boton "Añadir al carrito"
+productsList.addEventListener('click', e => {
+    if(e.target.classList.contains('btn-add-cart')) {
+        const product = e.target.parentNode
+
+        const infoProduct = {
+            quantity: 1,
+            title: product.querySelector('h2').innerText,
+            price: product.querySelector('p').innerText,
+
+        }
+/* Si el producto que se intenta agregar, ya se encuentra en el carrito, simplemente se aumenta la cantidad por 1, en caso contrario se agrega al carrito */
+
+        const exists = allProducts.some(product => product.title === infoProduct.title)
+
+        if (exists) {
+            const products = allProducts.map(product => {
+                if (product.title === infoProduct.title) {
+                    product.quantity++;
+                    return product;
+                }
+                else {
+                    return product
+                }
+            })
+            allProducts = [...products]
+        }
+        else {
+            allProducts = [...allProducts, infoProduct];
+        }
+    }
+    showHTML();
+    saveLocal();
+})
+
+/*Funcion que cuando se hace click en la "X" para eliminar un producto, lo elimina del arreglo, renderiza el carrito con el nuevo arreglo y lo sube al localStorage*/
+
+rowProduct.addEventListener('click', e => {
+    if(e.target.classList.contains('icon-close')) {
+        const product = e.target.parentElement;
+        const title = product.querySelector('.titulo-producto-carrito').innerText;
+
+        allProducts = allProducts.filter( 
+            product => product.title !== title)
+    
+            console.log(allProducts)
+    };
+    showHTML();
+    saveLocal();
+})
+
+/* Funcion para mostrar al lado del icono del carrito de compra el numero de articulos en el carrito y subir el resultado al localStorage */
+const allProductsCounter = () => {
+    let totalOfProducts = 0;
+
+    allProducts.forEach(product => {
+        totalOfProducts = totalOfProducts + product.quantity;
+        localStorage.setItem("contadorDeProductos", JSON.stringify(totalOfProducts));
+
+        countProducts.innerText = JSON.parse(localStorage.getItem("contadorDeProductos")) || 0;
+    })
+};
+
+// Funcion para renderizar el arreglo y mostarlo en el carrito
+
+const showHTML = () => {
+
+    rowProduct.innerHTML = "";
+    let total = 0;
+    let totalOfProducts = 0;
+
+    allProducts.forEach(product => {
+        const containerProduct = document.createElement('div')
+        containerProduct.classList.add('cart-product')
+        containerProduct.innerHTML = 
+        `
+        <div class="cart-info-product">
+            <span class="cantidad-producto-carrito">${product.quantity}</span>
+            <span class="titulo-producto-carrito">${product.title}</span>
+            <span class="precio-producto-carrito">${product.price}</span>
+        </div>
+        <i class="fa-solid fa-xmark icon-close"></i>
+        `
+        rowProduct.append(containerProduct);
+        total = total + parseInt(product.quantity * product.price.slice(1));
+        totalOfProducts = totalOfProducts + product.quantity;
+    })
+    valorTotal.innerText = `$${total}`;
+    countProducts.innerText = totalOfProducts;
+    allProductsCounter();
 }
 
-
-///////////////////////////////////////
-/* Agregar estudiante
-Con esta función se agrega a un nuevo estudiante
-
-Instrucciones
-
-name = Incluir el nombre del nuevo estudiante
-apellido = Incluir el apellido del nuevo estudiante
-age = Incluir la edad del nuevo estudiante
-Grado = Incluir el grado del nuevo estudiante
-
-*/
-
-estudiantes.push({
-        name: 'Orlando',
-        apellido: 'Perez',
-        age: 12,
-        grado: 3
-    })
-
-console.log(estudiantes);
-
-//////////////////////////////////////////////////////////
-
-
+showHTML();
