@@ -16,7 +16,7 @@ const countProducts = document.querySelector('#contador-productos');
 const productsList = document.querySelector('.container-items')
 
 // Variable que contendrá o el arreglo de objetos del localStorage o un arreglo vacío
-let allProducts = JSON.parse(localStorage.getItem("carrito")) || [];
+let shoppingCart = JSON.parse(localStorage.getItem("carrito")) || [];
 
 
 
@@ -36,7 +36,7 @@ btnCart.addEventListener('click', () => {
 
 // Funcion para guardar el contenido del arreglo en el localStorage
 const saveLocal = () => {
-    localStorage.setItem("carrito" , JSON.stringify(allProducts));
+    localStorage.setItem("carrito" , JSON.stringify(shoppingCart));
 };
 
 
@@ -53,10 +53,10 @@ productsList.addEventListener('click', e => {
         }
 /* Si el producto que se intenta agregar, ya se encuentra en el carrito, simplemente se aumenta la cantidad por 1, en caso contrario se agrega al carrito */
 
-        const exists = allProducts.some(product => product.title === infoProduct.title)
+        const exists = shoppingCart.some(product => product.title === infoProduct.title)
 
         if (exists) {
-            const products = allProducts.map(product => {
+            const products = shoppingCart.map(product => {
                 if (product.title === infoProduct.title) {
                     product.quantity++;
                     return product;
@@ -65,13 +65,13 @@ productsList.addEventListener('click', e => {
                     return product
                 }
             })
-            allProducts = [...products]
+            shoppingCart = [...products]
         }
         else {
-            allProducts = [...allProducts, infoProduct];
+            shoppingCart = [...shoppingCart, infoProduct];
         }
     }
-    showHTML();
+    renderizarCarrito();
     saveLocal();
 })
 
@@ -82,12 +82,12 @@ rowProduct.addEventListener('click', e => {
         const product = e.target.parentElement;
         const title = product.querySelector('.titulo-producto-carrito').innerText;
 
-        allProducts = allProducts.filter( 
+        shoppingCart = shoppingCart.filter( 
             product => product.title !== title)
     
-            console.log(allProducts)
+            console.log(shoppingCart)
     };
-    showHTML();
+    renderizarCarrito();
     saveLocal();
 })
 
@@ -95,7 +95,7 @@ rowProduct.addEventListener('click', e => {
 const allProductsCounter = () => {
     let totalOfProducts = 0;
 
-    allProducts.forEach(product => {
+    shoppingCart.forEach(product => {
         totalOfProducts = totalOfProducts + product.quantity;
         localStorage.setItem("contadorDeProductos", JSON.stringify(totalOfProducts));
 
@@ -105,13 +105,13 @@ const allProductsCounter = () => {
 
 // Funcion para renderizar el arreglo y mostarlo en el carrito
 
-const showHTML = () => {
+const renderizarCarrito = () => {
 
     rowProduct.innerHTML = "";
     let total = 0;
     let totalOfProducts = 0;
 
-    allProducts.forEach(product => {
+    shoppingCart.forEach(product => {
         const containerProduct = document.createElement('div')
         containerProduct.classList.add('cart-product')
         containerProduct.innerHTML = 
@@ -132,4 +132,4 @@ const showHTML = () => {
     allProductsCounter();
 }
 
-showHTML();
+renderizarCarrito();
