@@ -1,135 +1,195 @@
-/* variables globales */
+////////// ELEMENTOS HTML ////////////////////
 
-// El icono del carrito de compras
-const btnCart = document.querySelector('.icon-cart')
+// Icono del carrito
+const iconCart = document.querySelector('.icon-cart');
 
-// Cada uno de los items dentro del carrito de compra
-const rowProduct = document.querySelector('.row-product')
+// Div contenedor de productos en carrito y total
+const containerCartProducts = document.querySelector('.container-cart-products')
 
-// El total a pagar, se muestra dentro de la tarjeta del carrito de compras (.container-cart-products)
-const valorTotal = document.querySelector('.total-pagar');
+// Contador de productos 
+const contadorProductos = document.querySelector('#contador-productos');
 
-// El contador que muestra el numero de items dentro del carrito
-const countProducts = document.querySelector('#contador-productos'); 
+// Div contenedor de productos agregados al carrito
+const rowProduct = document.querySelector('.row-product');
 
-// Este div contiene las diferentes tarjetas con los productos de la pagina
-const productsList = document.querySelector('.container-items')
+// Total a pagar 
+const totalPagar = document.querySelector('.total-pagar');
 
-// Variable que contendrá o el arreglo de objetos del localStorage o un arreglo vacío
-let shoppingCart = JSON.parse(localStorage.getItem("carrito")) || [];
+//Div contenedor de productos de la tienda
+const containerItems = document.querySelector('.container-items');
+
+// Formulario de Pagos
+
+const formularioPagos = document.querySelector('.formulario-pagos');
 
 
+////////////////////////// VARIABLES ///////////////////////////////
 
-/* Funciones del proyecto */
+// Carrito ARRAY
+let carrito = JSON.parse(localStorage.getItem('carritoLocal')) || [];
 
-// Funcion para mostrar o esconder el carrito 
-btnCart.addEventListener('click', () => {
-    let containerCartProdcuts = document.querySelector('.container-cart-products')
+///////////////// FUNCIONES //////////////////////
 
-    if (containerCartProdcuts.style.display === 'none') {
-        containerCartProdcuts.style.display = 'block';
-    } 
-    else {
-        containerCartProdcuts.style.display = 'none';
+/* Funcion para guardar en LocalStorage */
+const guardarLocal = () => {
+    localStorage.setItem('carritoLocal', JSON.stringify(carrito));
+}
+
+
+/* Funcion para ocultar o mostrar el carrito */
+
+iconCart.addEventListener('click', () => {
+    if (containerCartProducts.style.display === 'none') {
+        containerCartProducts.style.display = 'block';
     }
-} )
+    else {
+        containerCartProducts.style.display = 'none';
+    }
+});
 
-// Funcion para guardar el contenido del arreglo en el localStorage
-const saveLocal = () => {
-    localStorage.setItem("carrito" , JSON.stringify(shoppingCart));
-};
+/* Funcion para agregar productos al carrito ARRAY */
 
-
-// Funcion para agregar un producto al carrito a traves del boton "Añadir al carrito"
-productsList.addEventListener('click', e => {
-    if(e.target.classList.contains('btn-add-cart')) {
-        const product = e.target.parentNode
-
-        const infoProduct = {
-            quantity: 1,
-            title: product.querySelector('h2').innerText,
-            price: product.querySelector('p').innerText,
-
+containerItems.addEventListener('click', (e) =>{
+    if (e.target.classList.contains('btn-add-cart')) {
+        const articulo = {
+            cantidad: 1,
+            nombre: e.target.parentNode.querySelector('h2').innerText,
+            precio: e.target.parentNode.querySelector('p').innerText
         }
-/* Si el producto que se intenta agregar, ya se encuentra en el carrito, simplemente se aumenta la cantidad por 1, en caso contrario se agrega al carrito */
 
-        const exists = shoppingCart.some(product => product.title === infoProduct.title)
+        const repetido = carrito.some(producto => producto.nombre === articulo.nombre);
 
-        if (exists) {
-            const products = shoppingCart.map(product => {
-                if (product.title === infoProduct.title) {
-                    product.quantity++;
-                    return product;
+        if (repetido) {
+            const aumentado = carrito.map(producto => {
+                if (producto.nombre === articulo.nombre) {
+                    producto.cantidad++;
+                    return producto
                 }
                 else {
-                    return product
+                    return producto
                 }
             })
-            shoppingCart = [...products]
+            carrito = [...aumentado];
         }
         else {
-            shoppingCart = [...shoppingCart, infoProduct];
+            carrito = [...carrito, articulo];
         }
+        console.log(carrito)
     }
     renderizarCarrito();
-    saveLocal();
-})
+    guardarLocal();
+    Toastify({
+        text: "Producto agregado",
+        duration: 1500,
+        position: 'center'
+    }).showToast();
+});
 
-/*Funcion que cuando se hace click en la "X" para eliminar un producto, lo elimina del arreglo, renderiza el carrito con el nuevo arreglo y lo sube al localStorage*/
-
-rowProduct.addEventListener('click', e => {
-    if(e.target.classList.contains('icon-close')) {
-        const product = e.target.parentElement;
-        const title = product.querySelector('.titulo-producto-carrito').innerText;
-
-        shoppingCart = shoppingCart.filter( 
-            product => product.title !== title)
-    
-            console.log(shoppingCart)
-    };
-    renderizarCarrito();
-    saveLocal();
-})
-
-/* Funcion para mostrar al lado del icono del carrito de compra el numero de articulos en el carrito y subir el resultado al localStorage */
-const allProductsCounter = () => {
-    let totalOfProducts = 0;
-
-    shoppingCart.forEach(product => {
-        totalOfProducts = totalOfProducts + product.quantity;
-        localStorage.setItem("contadorDeProductos", JSON.stringify(totalOfProducts));
-
-        countProducts.innerText = JSON.parse(localStorage.getItem("contadorDeProductos")) || 0;
-    })
-};
-
-// Funcion para renderizar el arreglo y mostarlo en el carrito
+/* Funcion para renderizar el carrito Array */
 
 const renderizarCarrito = () => {
+    let totalAPagar = 0;
+    let totalCantidadProductos = 0;
 
     rowProduct.innerHTML = "";
-    let total = 0;
-    let totalOfProducts = 0;
 
-    shoppingCart.forEach(product => {
-        const containerProduct = document.createElement('div')
-        containerProduct.classList.add('cart-product')
-        containerProduct.innerHTML = 
-        `
+    carrito.forEach(producto => {
+        const articulo = document.createElement('div');
+        articulo.classList.add('cart-product');
+        articulo.innerHTML = `
         <div class="cart-info-product">
-            <span class="cantidad-producto-carrito">${product.quantity}</span>
-            <span class="titulo-producto-carrito">${product.title}</span>
-            <span class="precio-producto-carrito">${product.price}</span>
+            <span class="cantidad-producto-carrito">${producto.cantidad}</span>
+            <span class="titulo-producto-carrito">${producto.nombre}</span>
+            <span class="precio-producto-carrito">${producto.precio}</span>
         </div>
         <i class="fa-solid fa-xmark icon-close"></i>
         `
-        rowProduct.append(containerProduct);
-        total = total + parseInt(product.quantity * product.price.slice(1));
-        totalOfProducts = totalOfProducts + product.quantity;
+        totalAPagar = totalAPagar + (producto.cantidad * producto.precio.slice(1));
+        totalCantidadProductos = totalCantidadProductos + producto.cantidad;
+        rowProduct.append(articulo);
     })
-    valorTotal.innerText = `$${total}`;
-    countProducts.innerText = totalOfProducts;
-    allProductsCounter();
+    contadorProductos.innerHTML = totalCantidadProductos;
+    totalPagar.innerHTML = `$${totalAPagar}`;
+
+    const noProductsText = document.querySelector('.no-products-text');
+    const textTotal = document.querySelector('.text-total')
+
+    if (carrito.length > 0) {
+        totalPagar.style.display = 'block';
+        textTotal.style.display = 'block';
+        noProductsText.style.display = 'none';
+        formularioPagos.style.display = 'block';
+        formularioPagos.style.position = 'relative';
+    }
+    else {
+        totalPagar.style.display = 'none';
+        textTotal.style.display = 'none';
+        noProductsText.style.display = 'block';
+        formularioPagos.style.display = 'none';
+        formularioPagos.style.position = 'absolute';
+        formularioPagos.style.top = 0;
+    }
+
+};
+
+/* Funcion eliminar productos del carrito */ 
+
+rowProduct.addEventListener('click', (e) => {
+    if (e.target.classList.contains('icon-close')) {
+        
+        const nombre = e.target.parentNode.querySelector('.titulo-producto-carrito').innerText;
+        
+        carrito = carrito.filter(producto => producto.nombre !== nombre);
+
+        guardarLocal();
+        renderizarCarrito();
+    }
+})
+
+/* API - FETCH - POKEMON */
+
+let randomPhrase = Math.floor(Math.random() * 4)
+let frase = "";
+let randomPokemon = Math.floor(Math.random() * 100)
+
+switch(randomPhrase) {
+    case 0:
+        frase = '"Una taza nueva al mes que bueno es"';
+        break;
+    case 1:
+        frase = '"Una taza nueva al año no hace daño"';
+        break;
+    case 2:
+        frase = '"Una taza nueva al día te da alegria"';
+        break;
+    case 3:
+        frase = '"Una taza nueva a la semana te quita la desgana"';
 }
+
+const url = `https://pokeapi.co/api/v2/pokemon/${randomPokemon}/`;
+
+fetch(url)
+.then(response => response.json())
+.then(data => {
+
+    let bannerPokemon = document.querySelector('.pokemones');
+
+    bannerPokemon.innerHTML = `
+    <img src="${data.sprites.front_default}"/>
+    <div class="datos-pokemon" >
+        <h2>${data.name.toUpperCase()}</h2>
+        <p class="frase-del-dia" >${frase}</p>
+    </div>
+    `
+} )
+
+/* Funcion para concretar la compra al presionar "pagar" en el formulario */
+
+formularioPagos.addEventListener('submit', () => {
+    carrito = [];
+    guardarLocal();
+    renderizarCarrito();
+    alert('¡Compra exitosa!');
+})
 
 renderizarCarrito();

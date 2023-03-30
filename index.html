@@ -1,13 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Libreria Toastify -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <!-- Hoja de estilo propia -->
     <link rel="stylesheet" href="./styles/styles.css">
     <title>La Casa del Meme</title>
 </head>
 <body>
+    <!-- HEADER E ICONO DE CARRITO -->
     <header>
         <h1>La Casa del Meme</h1>
         <div class="container-cart">
@@ -17,85 +21,145 @@
                     <span id="contador-productos">0</span>
                 </div>
             </div>
+            <div class="container-cart-products">
+                <div class="row-product">
+                    <div class="cart-product">
+                    </div>
+                </div>
+                <div class="total-product">
+                    <h3 class="text-total">Total: </h3>
+                    <p class="total-pagar">$0</p>
+                    <p class="no-products-text">No hay productos en el carrito</p>
+                </div>
+            </div>
         </div>
     </header>
-    <div class="the-container">
-        <div class="container-items">
-            <div class="item">
-                <figure>
-                    <img src="./styles/assets/coffee first.png" alt="">
-                </figure>
-                <div class="info-product">
-                    <h2>Coffee first</h2>
-                    <p>$1600</p>
-                    <button class="btn-add-cart">Añadir al carrito</button>
-                </div>
-            </div>
-            <div class="item">
-                <figure>
-                    <img src="./styles/assets/frases.png" alt="">
-                </figure>
-                <div class="info-product">
-                    <h2>Frases</h2>
-                    <p>$1400</p>
-                    <button class="btn-add-cart">Añadir al carrito</button>
-                </div>
-            </div>
-            <div class="item">
-                <figure>
-                    <img src="./styles/assets/frases 2.png" alt="">
-                </figure>
-                <div class="info-product">
-                    <h2>Frases 2</h2>
-                    <p>$1500</p>
-                    <button class="btn-add-cart">Añadir al carrito</button>
-                </div>
-            </div>
-            <div class="item">
-                <figure>
-                    <img src="./styles/assets/memes.png" alt="">
-                </figure>
-                <div class="info-product">
-                    <h2>Memes</h2>
-                    <p>$1400</p>
-                    <button class="btn-add-cart">Añadir al carrito</button>
-                </div>
-            </div>
-            <div class="item">
-                <figure>
-                    <img src="./styles/assets/simpsons.png" alt="">
-                </figure>
-                <div class="info-product">
-                    <h2>simpsons</h2>
-                    <p>$1600</p>
-                    <button class="btn-add-cart">Añadir al carrito</button>
-                </div>
-            </div>
-            <div class="item">
-                <figure>
-                    <img src="./styles/assets/stress.png" alt="">
-                </figure>
-                <div class="info-product">
-                    <h2>Stressed</h2>
-                    <p>$1400</p>
-                    <button class="btn-add-cart">Añadir al carrito</button>
-                </div>
+    <!-- PRODUCTOS DE LA TIENDA -->
+    <div class="container-items">
+        <div class="item">
+            <figure>
+                <img src="./styles/assets/coffee first.png" alt="">
+            </figure>
+            <div class="info-product">
+                <h2>Coffee first</h2>
+                <p>$1600</p>
+                <button class="btn-add-cart">Añadir al carrito</button>
             </div>
         </div>
-        <div class="container-cart-products">
-            <div class="row-product">
-                <div class="cart-product">
-                </div>
+        <div class="item">
+            <figure>
+                <img src="./styles/assets/frases.png" alt="">
+            </figure>
+            <div class="info-product">
+                <h2>Frases</h2>
+                <p>$1400</p>
+                <button class="btn-add-cart">Añadir al carrito</button>
             </div>
-            <div class="total-product">
-                <h3>Total: </h3>
-                <p class="total-pagar">$0</p>
+        </div>
+        <div class="item">
+            <figure>
+                <img src="./styles/assets/frases 2.png" alt="">
+            </figure>
+            <div class="info-product">
+                <h2>Frases 2</h2>
+                <p>$1500</p>
+                <button class="btn-add-cart">Añadir al carrito</button>
+            </div>
+        </div>
+        <div class="item">
+            <figure>
+                <img src="./styles/assets/memes.png" alt="">
+            </figure>
+            <div class="info-product">
+                <h2>Memes</h2>
+                <p>$1400</p>
+                <button class="btn-add-cart">Añadir al carrito</button>
+            </div>
+        </div>
+        <div class="item">
+            <figure>
+                <img src="./styles/assets/simpsons.png" alt="">
+            </figure>
+            <div class="info-product">
+                <h2>simpsons</h2>
+                <p>$1600</p>
+                <button class="btn-add-cart">Añadir al carrito</button>
+            </div>
+        </div>
+        <div class="item">
+            <figure>
+                <img src="./styles/assets/stress.png" alt="">
+            </figure>
+            <div class="info-product">
+                <h2>Stressed</h2>
+                <p>$1400</p>
+                <button class="btn-add-cart">Añadir al carrito</button>
             </div>
         </div>
 
     </div>
-
+    <!-- DIV DEL MENSAJE DEL POKEMON (API) -->
+    <div class="pokemones">
+        
+    </div>
+    <!-- FORMULARIO DE PAGO -->
+    <form class="formulario-pagos" action="" style="display: none;">
+        <h2>Formulario de pago</h2>
+        <section>
+            <h3>Datos del comprador</h3>
+            <label for="">Nombre y Apellido del cliente</label>
+            <input type="text" required>
+            <label for="">Dirección</label>
+            <input type="text" placeholder="Avenida Santa Ana..." required>
+            <label for="">Correo Electronico</label>
+            <input type="email" required>
+        </section>
+        <section>
+            <h3>Datos del titular</h3>
+            <label for="">Nombre del Titular</label>
+            <input type="text" required>
+            <label for="">Numero de tarjeta</label>
+            <input type="number" required>
+            <label class="label-corto" >Fecha de Expiración</label>
+            <select required>
+                <option value="">Mes</option>
+                <option value="">Enero</option>
+                <option value="">Febrero</option>
+                <option value="">Marzo</option>
+                <option value="">Abril</option>
+                <option value="">mayo</option>
+                <option value="">Junio</option>
+                <option value="">Julio</option>
+                <option value="">Agosto</option>
+                <option value="">Septiembre</option>
+                <option value="">Octubre</option>
+                <option value="">Noviembre</option>
+                <option value="">Diciembre</option>
+            </select>
+            <select name="" id="" required>
+                <option value="">Año</option>
+                <option value="">2023</option>
+                <option value="">2024</option>
+                <option value="">2025</option>
+                <option value="">2026</option>
+                <option value="">2027</option>
+                <option value="">2028</option>
+                <option value="">2029</option>
+                <option value="">2030</option>
+                <option value="">2031</option>
+                <option value="">2032</option>
+            </select>
+        </section>
+        <input class="boton-completar-transaccion" type="submit" value="Pagar">
+    </form>
+    <footer>
+        <p>LA CASA DEL MEME - Todos los derechos reservados</p>
+    </footer>
+    <!-- Libreria Toastify -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <!-- Libreria Font Awesome -->
     <script src="https://kit.fontawesome.com/7f7354e937.js" crossorigin="anonymous"></script>
+    <!-- Mi JavaScript -->
     <script src="./code.js"></script>
 </body>
 </html>

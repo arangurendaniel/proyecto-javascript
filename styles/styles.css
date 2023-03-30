@@ -1,3 +1,5 @@
+/* ESTILOS GENERALES */
+
 *::after,
 *::before,
 * {
@@ -15,6 +17,8 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     margin: 20px auto;
 }
+
+/* HEADER E ICONO DE CARRITO */
 
 header {
     display: flex;
@@ -47,14 +51,19 @@ header {
     right: 25%;
 }
 
+/* DIV DENTRO DEL ICONO DE CARRITO */
+
 .container-cart-products {
     width: 400px;
+    position: absolute;
     background-color: white;
+    top: 150%;
+    right: 0;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.20);
     z-index: 1;
     padding: 0 15px;
     display: none;
-    border: 1px solid lightblue;
-    margin-left: 20px;
 }
 
 .cart-product {
@@ -115,16 +124,18 @@ header {
     font-weight: bold;
 }
 
-.the-container {
-    display: flex;
-}
+/* PRODUCTOS DE LA TIENDA */
 
 .container-items {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     margin: 10px auto;
-    grid-column: 1 span 3;
+}
+
+.cart-empty {
+    padding: 20px;
+    text-align: center;
 }
 
 .item {
@@ -167,3 +178,93 @@ figure {
     cursor: pointer;
 }
 
+/* Pagina de pagos */
+
+.formulario-pagos {
+    width: 80vw;
+    max-width: 600px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.20);
+    border-radius: 12px;
+    margin: auto;
+    margin-bottom: 40px;
+    padding-bottom: 10px;
+}
+
+.formulario-pagos section {
+    margin: 10px;
+    padding-bottom: 10px;
+}
+
+.formulario-pagos section:first-of-type {
+    border-bottom: 2px solid gray;
+}
+
+.formulario-pagos h2 {
+    text-align: center;
+}
+
+label, input {
+    display: block;
+    margin: 5px 0;
+}
+
+section input {
+    width: 80%;
+    padding: 3px;
+    border: none;
+    background-color: black;
+    color: white;
+    border-radius: 12px;
+
+}
+
+.boton-completar-transaccion {
+    display: block;
+    margin: 10px auto;
+    width: 60%;
+    max-width: 300px;
+    padding: 5px;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/* DIV de la API */
+
+.pokemones {
+    width: 100%;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.pokemones img {
+    width: 100px;
+    height: 100px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.20);
+
+}
+
+.datos-pokemon {
+    line-height: 2;
+    margin-left: 10px;
+    
+}
+
+.frase-del-dia {
+    font-size: 1.5rem;
+}
+
+/* FOOTER */
+
+footer {
+    width: 100%;
+    height: 30px;
+    text-align: center;
+    background-color: #000;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
